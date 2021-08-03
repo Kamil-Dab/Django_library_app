@@ -3,12 +3,7 @@ from .models import Book, BookSearcher
 from .forms import BookForm, BookSearcherForm
 from .serializers import BookSerializer
 from django.contrib import messages
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework import generics
-from django_filters.rest_framework import DjangoFilterBackend
-from django.shortcuts import get_object_or_404
 
 
 class BookPurchaseList(generics.ListAPIView):
@@ -131,45 +126,49 @@ def import_books(request):
     import json
     if request.method == 'POST':
         key_word = request.POST['key_word']
-        import_query = dict()
-        api_request = requests.get(
-            "https://www.googleapis.com/books/v1/volumes?q=" + key_word)
-        try:
-            api = json.loads(api_request.content)
-        except Exception as e:
-            api = "Error..."
-        for book in api['items']:
-            import_query['title'] = book['volumeInfo']['title']
-            if 'authors' not in book['volumeInfo']:
-                import_query['author'] = None
-            else:
-                import_query['author'] = book['volumeInfo']['authors'][0]
-            if 'publishedDate' not in book['volumeInfo']:
-                import_query['publication_date'] = None
-            else:
-                import_query['publication_date'] = int(book['volumeInfo']['publishedDate'][0:4])
-            if 'pageCount' not in book['volumeInfo']:
-                import_query['number_of_pages'] = None
-            else:
-                import_query['number_of_pages'] = book['volumeInfo']['pageCount']
-            if 'imageLinks' not in book['volumeInfo']:
-                import_query['thumbnail_link'] = None
-            else:
-                import_query['thumbnail_link'] = book['volumeInfo']['imageLinks']['thumbnail']
-            for number in book['volumeInfo']['industryIdentifiers']:
-                if number['type'] == 'ISBN_10':
-                    import_query['isbn_number'] = number['identifier']
-                elif number['type'] == 'ISBN_13':
-                    import_query['isbn_number'] = number['identifier']
+        if key_word == None or key_word == '':
+            return redirect('import_books')
+        else:
+            key_word = request.POST['key_word']
+            import_query = dict()
+            api_request = requests.get(
+                "https://www.googleapis.com/books/v1/volumes?q=" + key_word)
+            try:
+                api = json.loads(api_request.content)
+            except Exception as e:
+                api = "Error..."
+            for book in api['items']:
+                import_query['title'] = book['volumeInfo']['title']
+                if 'authors' not in book['volumeInfo']:
+                    import_query['author'] = None
                 else:
-                    import_query['isbn_number'] = None
-            import_query['language'] = book['volumeInfo']['language']
-            form = BookForm(import_query)
-            if form.is_valid():
-                form.save()
-                messages.success(request, "Book Has Been Added!")
-            else:
-                messages.error(request, form.errors)
-        return render(request, 'import_books.html', {'api': api})
+                    import_query['author'] = book['volumeInfo']['authors'][0]
+                if 'publishedDate' not in book['volumeInfo']:
+                    import_query['publication_date'] = None
+                else:
+                    import_query['publication_date'] = int(book['volumeInfo']['publishedDate'][0:4])
+                if 'pageCount' not in book['volumeInfo']:
+                    import_query['number_of_pages'] = None
+                else:
+                    import_query['number_of_pages'] = book['volumeInfo']['pageCount']
+                if 'imageLinks' not in book['volumeInfo']:
+                    import_query['thumbnail_link'] = None
+                else:
+                    import_query['thumbnail_link'] = book['volumeInfo']['imageLinks']['thumbnail']
+                for number in book['volumeInfo']['industryIdentifiers']:
+                    if number['type'] == 'ISBN_10':
+                        import_query['isbn_number'] = number['identifier']
+                    elif number['type'] == 'ISBN_13':
+                        import_query['isbn_number'] = number['identifier']
+                    else:
+                        import_query['isbn_number'] = None
+                import_query['language'] = book['volumeInfo']['language']
+                form = BookForm(import_query)
+                if form.is_valid():
+                    form.save()
+                    messages.success(request, "Book Has Been Added!")
+                else:
+                    messages.error(request, form.errors)
+            return render(request, 'import_books.html', {'api': api})
     else:
         return render(request, 'import_books.html', {})
