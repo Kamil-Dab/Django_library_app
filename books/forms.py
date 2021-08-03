@@ -1,6 +1,7 @@
 from django import forms
-from .models import Book, BookSearcher, KeyValueBook
 from django.core.exceptions import ValidationError
+
+from .models import Book, BookSearcher, KeyValueBook
 
 
 class BookForm(forms.ModelForm):

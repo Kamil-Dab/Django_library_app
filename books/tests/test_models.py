@@ -1,4 +1,5 @@
 from django.test import TestCase
+
 from books.models import Book, BookSearcher, KeyValueBook
 
 
@@ -6,9 +7,14 @@ class BookTestModels(TestCase):
 
     def setUp(self):
         # Set up non-modified objects used by all test methods
-        Book.objects.create(title='Harry Potter', author='J.K Rowling', publication_date=1997, number_of_pages=332,
-                            thumbnail_link='https://ecsmedia.pl/c/harry-potter-i-kamien-filozoficzny-tom-1-b-iext66938428.jpg',
-                            isbn_number='9780747532743', language='en')
+        Book.objects.create(
+            title='Harry Potter',
+            author='J.K Rowling',
+            publication_date=1997,
+            number_of_pages=332,
+            thumbnail_link='https://ecsmedia.pl/c/harry-potter-i-kamien-filozoficzny-tom-1-b-iext66938428.jpg',
+            isbn_number='9780747532743',
+            language='en')
 
     def test_first_title_label(self):
         book = Book.objects.get(id=1)
@@ -100,7 +106,12 @@ class BookSearcherTestModels(TestCase):
 
     def setUp(self):
         # Set up non-modified objects used by all test methods
-        BookSearcher.objects.create(title='Harry Potter', author='J.K Rowling', to_date=1997, from_date=1995, language='en')
+        BookSearcher.objects.create(
+            title='Harry Potter',
+            author='J.K Rowling',
+            to_date=1997,
+            from_date=1995,
+            language='en')
 
     def test_first_title_label(self):
         book = BookSearcher.objects.get(id=1)

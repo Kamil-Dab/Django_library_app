@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
+from django.contrib import messages
+from rest_framework import generics
+
 from .models import Book, BookSearcher
 from .forms import BookForm, BookSearcherForm
 from .serializers import BookSerializer
-from django.contrib import messages
-from rest_framework import generics
 
 
 class BookPurchaseList(generics.ListAPIView):
@@ -11,8 +12,8 @@ class BookPurchaseList(generics.ListAPIView):
 
     def get_queryset(self):
         """
-        This view should return a list of all the purchases for
-        the user as determined by the username portion of the URL.
+        This view should return a list of all the books for
+        the user and filtered by query string.
         """
         queryset = Book.objects.all()
         title = self.request.query_params.get('title')
@@ -34,10 +35,17 @@ class BookPurchaseList(generics.ListAPIView):
 
 
 def home(request):
+    """
+    This is home view
+    """
     return render(request, 'home.html', {})
 
 
 def books(request):
+    """
+    This view should return list of books in table. It can also
+    allows to searching books by title, author, from/to date and language
+    """
     output = list()
     if request.method == 'POST':
         form = BookSearcherForm(request.POST or None)
@@ -81,6 +89,9 @@ def books(request):
 
 
 def add_books(request):
+    """
+    This view allows us to add books to database.
+    """
     output = list()
     if request.method == 'POST':
         form = BookForm(request.POST or None)
@@ -97,19 +108,28 @@ def add_books(request):
         return render(request, 'add_books.html', {'library': library, 'output': output})
 
 
-def delete(request, book_id):
+def delete(request, book_id: int):
+    """
+    This view allows us to delete books from database.
+    """
     item = Book.objects.get(pk=book_id)
     item.delete()
     messages.success(request, 'Book has been deleted')
     return redirect(add_books)
 
 
-def edit(request, book_id):
+def edit(request, book_id: int):
+    """
+    This view allows us to edit books from database.
+    """
     edit_item = Book.objects.get(pk=book_id)
     return render(request, 'edit.html', {'output': edit_item})
 
 
-def update(request, book_id):
+def update(request, book_id: int):
+    """
+    This view allows us to update books from database.
+    """
     update_item = Book.objects.get(pk=book_id)
     form = BookForm(request.POST, instance=update_item)
     if form.is_valid():
@@ -122,11 +142,14 @@ def update(request, book_id):
 
 
 def import_books(request):
+    """
+    This view allows us import books from https://developers.google.com/books/docs/v1/using#WorkingVolumes by key words/volumes
+    """
     import requests
     import json
     if request.method == 'POST':
         key_word = request.POST['key_word']
-        if key_word == None or key_word == '':
+        if key_word is None or key_word == '':
             return redirect('import_books')
         else:
             key_word = request.POST['key_word']

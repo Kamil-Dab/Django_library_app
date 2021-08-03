@@ -1,8 +1,7 @@
-from django.contrib.auth.models import User
 from django.test import TestCase, Client
 from django.urls import reverse
-from books.models import Book, BookSearcher, KeyValueBook
-import json
+
+from books.models import Book, BookSearcher
 
 
 class TestViews(TestCase):
@@ -19,11 +18,20 @@ class TestViews(TestCase):
         self.import_books_url = reverse('import_books')
         self.list_book_url = reverse('list_book')
 
-        self.book_object1 = Book.objects.create(title='Harry Potter', author='J.K Rowling', publication_date=1997, number_of_pages=332,
-                            thumbnail_link='https://ecsmedia.pl/c/harry-potter-i-kamien-filozoficzny-tom-1-b-iext66938428.jpg',
-                            isbn_number='9780747532743', language='en')
-        self.booksearch_object1 = BookSearcher.objects.create(title='Harry Potter', author='J.K Rowling', to_date=1997, from_date=1995,
-                                    language='en')
+        self.book_object1 = Book.objects.create(
+            title='Harry Potter',
+            author='J.K Rowling',
+            publication_date=1997,
+            number_of_pages=332,
+            thumbnail_link='https://ecsmedia.pl/c/harry-potter-i-kamien-filozoficzny-tom-1-b-iext66938428.jpg',
+            isbn_number='9780747532743',
+            language='en')
+        self.booksearch_object1 = BookSearcher.objects.create(
+            title='Harry Potter',
+            author='J.K Rowling',
+            to_date=1997,
+            from_date=1995,
+            language='en')
 
     def test_home_GET(self):
         response = self.client.get(self.home_url)
