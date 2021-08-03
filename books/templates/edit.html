@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Edit Book</h1>
+<br/>
+<form method="POST" action="{% url 'update' output.id %}">{% csrf_token %}
+    <table class="table table-hover" border="1">
+        <tr>
+            <td>Title</td>
+            <td><input type="text" name="title" value="{{ output.title }}"></td>
+        </tr>
+        <tr>
+            <td>Author</td>
+            <td><input type="text" name="author" value="{{ output.author }}"></td>
+        </tr>
+        <tr>
+            <td>Date of Publication</td>
+            <td><input type="number" name="publication_date" value="{{ output.publication_date }}"></td>
+        </tr>
+        <tr>
+            <td>Number of Pages</td>
+            <td><input type="number" name="number_of_pages" value="{{ output.number_of_pages }}"></td>
+        </tr>
+        <tr>
+            <td>Thumbnail</td>
+            <td><input type="text" name="thumbnail_link" value="{{ output.thumbnail_link }}"></td>
+        </tr>
+        <tr>
+            <td>ISBN number</td>
+            <td><input type="number" name="isbn_number" value="{{ output.isbn_number }}"></td>
+        </tr>
+        <tr>
+            <td>Language</td>
+            <td><input type="text" name="language" value="{{ output.language }}"></td>
+        </tr>
+    </table>
+    <input type="submit" value="Update" class="btn btn-outline-success"/>
+    <a href="{% url 'add_books' %}" class="btn btn-outline-success">Back</a>
+</form>
+
+{% endblock %}

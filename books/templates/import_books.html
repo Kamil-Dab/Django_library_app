@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Import books</h1>
+<form action="{% url 'import_books' %}" class="d-flex" method="POST">{% csrf_token %}
+        <input class="form-control me-2" type="search" placeholder="Key Words" aria-label="Search" name="key_word">
+        <button class="btn btn-outline-success" type="submit">Import</button>
+</form>
+
+{% endblock %}
