@@ -40,7 +40,10 @@
                     {% else %}
                         <td><a href="{{ item.thumbnail_link }}">Link</a></td>
                     {% endif %}
-                    <td>{{ item.isbn_number }}</td>
+                    {% if item.isbn_number == None %}
+                        <td>-</td>
+                    {% else %}
+                        <td>{{ item.isbn_number }}</td>
                     <td>{{ item.language }}</td>
                 </tr>
         {% endfor %}
