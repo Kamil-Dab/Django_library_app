@@ -46,6 +46,7 @@
                         <td>-</td>
                     {% else %}
                         <td>{{ item.isbn_number }}</td>
+                    {% endif %}
                     <td>{{ item.language }}</td>
                     <td><a href="{% url 'edit' item.id %}" class="btn btn-outline-success btn-sm">Edit</a></td>
                     <td><a href="{% url 'delete' item.id %}" class="btn btn-outline-success btn-sm">X</a></td>
