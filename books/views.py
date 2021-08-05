@@ -178,13 +178,16 @@ def import_books(request):
                     import_query['thumbnail_link'] = None
                 else:
                     import_query['thumbnail_link'] = book['volumeInfo']['imageLinks']['thumbnail']
-                for number in book['volumeInfo']['industryIdentifiers']:
-                    if number['type'] == 'ISBN_10':
-                        import_query['isbn_number'] = number['identifier']
-                    elif number['type'] == 'ISBN_13':
-                        import_query['isbn_number'] = number['identifier']
-                    else:
-                        import_query['isbn_number'] = None
+                if 'industryIdentifiers' not in book['volumeInfo']:
+                    import_query['thumbnail_link'] = None
+                else:
+                    for number in book['volumeInfo']['industryIdentifiers']:
+                        if number['type'] == 'ISBN_10':
+                            import_query['isbn_number'] = number['identifier']
+                        elif number['type'] == 'ISBN_13':
+                            import_query['isbn_number'] = number['identifier']
+                        else:
+                            import_query['isbn_number'] = None
                 import_query['language'] = book['volumeInfo']['language']
                 form = BookForm(import_query)
                 if form.is_valid():
