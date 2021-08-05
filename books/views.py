@@ -183,12 +183,17 @@ def import_books(request):
                 else:
                     for number in book['volumeInfo']['industryIdentifiers']:
                         if number['type'] == 'ISBN_10':
+                            print(number['identifier'], type(number['identifier']))
                             import_query['isbn_number'] = number['identifier']
                         elif number['type'] == 'ISBN_13':
+                            print(number['identifier'], type(number['identifier']))
                             import_query['isbn_number'] = number['identifier']
                         else:
                             import_query['isbn_number'] = None
-                import_query['language'] = book['volumeInfo']['language']
+                if 'language' not in book['volumeInfo']:
+                    import_query['language'] = None
+                else:
+                    import_query['language'] = book['volumeInfo']['language']
                 form = BookForm(import_query)
                 if form.is_valid():
                     form.save()

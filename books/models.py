@@ -38,12 +38,12 @@ def validate_isbn_control_number(number: str):
         even_positions = int(number[0]) + int(number[2]) + int(number[4]) + int(number[6]) + int(number[8]) + int(number[10])
         odd_positions = int(number[1]) + int(number[3]) + int(number[5]) + int(number[7]) + int(number[9]) + int(number[11])
         sum_control = 10 - ((even_positions + 3 * odd_positions) % 10)
-        if int(number[12]) != sum_control:
+        if int(number[12]) != int(sum_control):
             raise ValidationError('ISBN-13 is invalid')
     if is_isbn10(number):
         sum_control = (int(number[0])*1 + int(number[1])*2 + int(number[2])*3 + int(number[3])*4 + int(number[4])*5
                        + int(number[5])*6 + int(number[6])*7 + int(number[7])*8 + int(number[8])*9) % 11
-        if int(number[9]) != sum_control:
+        if int(float(number[9])) != int(sum_control):
             raise ValidationError('ISBN-10 is invalid')
 
 
