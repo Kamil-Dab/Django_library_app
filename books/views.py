@@ -179,7 +179,7 @@ def import_books(request):
                 else:
                     import_query['thumbnail_link'] = book['volumeInfo']['imageLinks']['thumbnail']
                 if 'industryIdentifiers' not in book['volumeInfo']:
-                    import_query['thumbnail_link'] = None
+                    import_query['isbn_number'] = None
                 else:
                     for number in book['volumeInfo']['industryIdentifiers']:
                         if number['type'] == 'ISBN_10':
